@@ -1,0 +1,395 @@
+<html lang="en">
+<head>
+    <title>Scales Thesaurus</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Add JSZip library for ZIP file creation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <section>
+                <h2 class="sidebar-heading">Music Theory</h2>
+                <div class="music-theory">
+                    
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="sidebar-heading">Appearance</h2>
+                <div class="appearance">
+                    <div class="control-group">
+                        <label for="string-height">String Height (px):</label>
+                        <input type="number" id="string-height" min="1" max="20" value="1">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="fret-width">Fret Width (px):</label>
+                        <input type="number" id="fret-width" min="1" max="20" value="1">
+                    </div>
+                    
+                    <div id="custom-colors" style="display: none;">
+                        <!-- Custom color inputs will be shown here -->
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="sidebar-heading">Instrument Setup</h2>
+                <div class="instrument-setup">
+                    <div class="control-group">
+                        <label for="string-count">Number of Strings:</label>
+                        <input type="number" id="string-count" min="1" max="20" value="6">
+                    </div>
+                    
+                    <div id="tuning-container">
+                        <!-- Tuning inputs will be added here dynamically -->
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="sidebar-heading">Chromatic Tuner</h2>
+                <div class="chromatic-tuner-controls">
+                    <button id="chromatic-tuner-toggle">Show Chromatic Tuner</button>
+                    <div id="chromatic-tuner-container" style="display: none;">
+                         <div class="chromatic-tuner-buttons">
+                             <!-- Note buttons will be generated dynamically -->
+                         </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="sidebar-heading">Slideshow</h2>
+                <div class="slideshow-options">
+                    
+                    <div class="slideshow-controls">
+                        
+                        <button id="export-all">Export All</button>
+                        <button id="export-diagrams-only">Export Diagrams Only</button>
+                        <button id="set-filename">Set Filename</button>
+                        <button id="clear-slideshow">Clear Slideshow</button>
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="sidebar-heading">Melodic Patterns</h2>
+                <div class="melodic-patterns">
+                    <div class="control-group">
+                        <label for="melodic-pattern-select">Pattern:</label>
+                        <select id="melodic-pattern-select">
+                            <option value="1">1 (each note)</option>
+                            <option value="1 2">1 2 (scale step)</option>
+                            <option value="1 3">1 3 (skip one)</option>
+                            <option value="1 2 3">1 2 3 (three note)</option>
+                            <option value="1 3 5">1 3 5 (triad)</option>
+                            <option value="1 3 5 7">1 3 5 7 (seventh)</option>
+                            <option value="1 2 3 2">1 2 3 2 (forward-back)</option>
+                            <option value="1 4 3 6">1 4 3 6 (leapfrog)</option>
+                            <option value="1 5 1 5">1 5 1 5 (power chord)</option>
+                            <option value="1 2 3 4 5 4 3 2">1 2 3 4 5 4 3 2 (up-down)</option>
+                            <option value="8 7 6 5 4 3 2 1">8 7 6 5 4 3 2 1 (descending)</option>
+                            <option value="1 3 5 8 5 3">1 3 5 8 5 3 (arpeggio down)</option>
+                            <option value="1 3 2 4 3 5">1 3 2 4 3 5 (zigzag up)</option>
+                            <option value="5 3 4 2 3 1">5 3 4 2 3 1 (zigzag down)</option>
+                            <option value="1 2 3 5 8 5 3 2">1 2 3 5 8 5 3 2 (mountain)</option>
+                            <option value="1 8 2 7 3 6 4 5">1 8 2 7 3 6 4 5 (converging)</option>
+                            <option value="1 3 5 7 2 4 6 8">1 3 5 7 2 4 6 8 (odd-even)</option>
+                            <option value="1 1 2 2 3 3">1 1 2 2 3 3 (repeated notes)</option>
+                            <option value="1 3 2 5 3 7 5 8">1 3 2 5 3 7 5 8 (cascading)</option>
+                            <option value="1 8 3 6 5 4 2 7">1 8 3 6 5 4 2 7 (random walk)</option>
+                            <option value="1 2 3 5 1 2 3 5">1 2 3 5 1 2 3 5 (repeating motif)</option>
+                            <option value="1 3 5 7 7 5 3 1">1 3 5 7 7 5 3 1 (symmetrical)</option>
+                            <option value="1 2 1 3 1 4 5 4 5">1 2 1 3 1 4 5 4 5 (neighbor tones)</option>
+                            <option value="8 5 3 1 3 5 8 5">8 5 3 1 3 5 8 5 (fan pattern)</option>
+                            <option value="1 5 2 4 3 7 6 8">1 5 2 4 3 7 6 8 (scattered pattern)</option>
+                            <option value="1 8 1 7 1 6 1 5">1 8 1 7 1 6 1 5 (descending anchor)</option>
+                            <option value="5 6 7 8 1 2 3 4">5 6 7 8 1 2 3 4 (upper/lower)</option>
+                            <option value="1 2 3 1 2 3 4 5">1 2 3 1 2 3 4 5 (staggered ascent)</option>
+                            <option value="8 7 6 8 7 6 5 4">8 7 6 8 7 6 5 4 (staggered descent)</option>
+                            <option value="1 3 2 1 2 4 3 2">1 3 2 1 2 4 3 2 (wave pattern)</option>
+                            <option value="1 8 2 7 4 5 6 3">1 8 2 7 4 5 6 3 (crisscross)</option>
+                            <option value="1 3 5 8 8 5 3 1">1 3 5 8 8 5 3 1 (mirror image)</option>
+                            <option value="1 2 3 1 3 5 3 1">1 2 3 1 3 5 3 1 (pyramid pattern)</option>
+                            <option value="1 5 3 1 5 9 7 5">1 5 3 1 5 9 7 5 (alternating direction)</option>
+                            <option value="1 5 9 5 1 5 9 13">1 5 9 5 1 5 9 13 (expanding range)</option>
+                            <option value="8 4 1 4 8 12 8 4">8 4 1 4 8 12 8 4 (pendulum swing)</option>
+                            <option value="1 2 3 2 4 3 5 4">1 2 3 2 4 3 5 4 (advancing pairs)</option>
+                            <option value="8 7 6 7 5 6 4 5">8 7 6 7 5 6 4 5 (retreating pairs)</option>
+                            <option value="custom">Custom Pattern</option>
+                        </select>
+                    </div>
+                    <div id="custom-pattern-container" style="display: none;">
+                        <div class="control-group">
+                            <label for="custom-pattern">Custom Pattern (space-separated numbers):</label>
+                            <input type="text" id="custom-pattern" placeholder="e.g., 1 2 3 5">
+                        </div>
+                    </div>
+                    <div class="melodic-controls">
+                        <button id="play-melodic-pattern">Play Melodic Pattern</button>
+                        <button id="stop-melodic-pattern" style="display: none;">Stop</button>
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="sidebar-heading">Export</h2>
+                <div class="export-section" style="padding: 10px;">
+                    <button id="save-all-scales" style="width: 100%; padding: 10px; font-size: 14px;">Save All Scales for All Keys as jpgs</button>
+                    <button id="save-all-chords" style="width: 100%; padding: 10px; font-size: 14px; margin-top: 10px;">Save All Chords for All Keys as jpgs</button>
+                    <button id="save-all-intervals" style="width: 100%; padding: 10px; font-size: 14px; margin-top: 10px;">Save All Intervals for All Keys as jpgs</button>
+                    
+                    <!-- Buttons for exporting all string counts -->
+                    <button id="save-scales-all-strings-zip" style="width: 100%; padding: 10px; font-size: 14px; margin-top: 20px; background-color: #e67e22;">Save All Scales (1-Max Strings) as ZIP</button>
+                    <button id="save-chords-all-strings-zip" style="width: 100%; padding: 10px; font-size: 14px; margin-top: 10px; background-color: #e67e22;">Save All Chords (1-Max Strings) as ZIP</button>
+                    <button id="save-intervals-all-strings-zip" style="width: 100%; padding: 10px; font-size: 14px; margin-top: 10px; background-color: #e67e22;">Save All Intervals (1-Max Strings) as ZIP</button>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="sidebar-heading">Pattern Generator</h2>
+                <div class="pattern-generator-controls">
+                    <button id="generate-all-intervals">Generate All Intervals</button>
+                    <button id="generate-all-scales">Generate All Scales</button>
+                    <button id="generate-all-chords">Generate All Chords</button>
+                </div>
+            </section>
+        </aside>
+        
+        <main class="main-content">
+            <header class="top-header">
+                <h1 class="main-title">Scales Thesaurus</h1>
+                <div class="top-header-content">
+                    <nav class="header-nav">
+                        <a href="scales.html" class="header-link">Scales</a>
+                        <a href="chords.html" class="header-link">Chords</a>
+                        <a href="intervals.html" class="header-link">Intervals</a>
+                        <a href="data.html" class="header-link">Data</a>
+                        <a href="about.html" class="header-link">About</a>
+                    </nav>
+                    <div class="sidebar-toggle-container">
+                        <button id="sidebar-toggle" aria-expanded="false">
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                            <span class="sr-only">Toggle Sidebar</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="fretboard-container">
+                <div id="fretboard"></div>
+            </div>
+            
+            <div class="slideshow-container">
+                <div id="slideshow-items"></div>
+            </div>
+            
+            <div class="pattern-generator">
+                <div id="generated-patterns"></div>
+            </div>
+            
+            <div class="fretboard-controls">
+                <button id="play-pattern">Play Pattern</button>
+                <button id="add-to-slideshow">Add to Slideshow</button>
+                <button id="export-diagram">Export Diagram</button>
+            </div>
+
+            <footer class="bottom-footer">
+                <div class="control-group">
+                    <label for="key-select">Key:</label>
+                    <select id="key-select">
+                        <option value="C">C</option>
+                        <option value="G">G</option>
+                        <option value="D">D</option>
+                        <option value="A">A</option>
+                        <option value="E">E</option>
+                        <option value="B">B</option>
+                        <option value="F#">F#</option>
+                        <option value="C#">C#</option>
+                        <option value="F">F</option>
+                        <option value="A#">A#</option>
+                        <option value="D#">D#</option>
+                        <option value="G#">G#</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="pattern-type">Pattern Type:</label>
+                    <select id="pattern-type">
+                        <option value="scale">Scale</option>
+                        <option value="chord">Chord</option>
+                        <option value="interval">Interval</option>
+                        <option value="grid">Grid (3-Fret Spans)</option>
+                        <option value="grid2">Grid (2-Fret Spans)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="pattern-select">Pattern:</label>
+                    <select id="pattern-select">
+                        <!-- Options will be populated based on pattern type -->
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="start-fret">Start Fret:</label>
+                    <input type="number" id="start-fret" min="0" max="24" value="0">
+                </div>
+                <div class="control-group">
+                    <label for="end-fret">End Fret:</label>
+                    <input type="number" id="end-fret" min="1" max="24" value="12">
+                </div>
+                <div class="control-group">
+                    <label for="display-mode">Display Mode:</label>
+                    <select id="display-mode">
+                        <option value="intervals">Intervals</option>
+                        <option value="notes">Notes</option>
+                        <option value="roman">Roman Numerals</option>
+                        <option value="solfege">Solfège (Do Re Mi)</option>
+                        <option value="none">No Text</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="color-theme">Color Theme:</label>
+                    <select id="color-theme">
+                        <option value="default">Default</option>
+                        <option value="dark">Dark</option>
+                        <option value="colorful">Colorful</option>
+                        <option value="ocean">Ocean</option>
+                        <option value="forest">Forest</option>
+                        <option value="sunset">Sunset</option>
+                        <option value="lavender">Lavender</option>
+                        <option value="autumn">Autumn</option>
+                        <option value="pastel">Pastel</option>
+                        <option value="neon">Neon</option>
+                        <option value="monoRed">Mono Red</option>
+                        <option value="monoBlue">Mono Blue</option>
+                        <option value="monoGreen">Mono Green</option>
+                        <option value="grayscale">Grayscale</option>
+                        <option value="blackAndWhite">Black & White</option>
+                        <option value="vintage">Vintage</option>
+                        <option value="beach">Beach</option>
+                        <option value="rainbow">Rainbow</option>
+                        <option value="desert">Desert</option>
+                        <option value="retro">Retro</option>
+                        <option value="mint">Mint</option>
+                        <option value="cherry">Cherry</option>
+                        <option value="deepOcean">Deep Ocean</option>
+                        <option value="coral">Coral</option>
+                        <option value="goldAndBlack">Gold & Black</option>
+                        <option value="purpleHaze">Purple Haze</option>
+                        <option value="earthTones">Earth Tones</option>
+                        <option value="vibrant" selected>Vibrant</option>
+                        <option value="cosmic">Cosmic</option>
+                        <option value="coffee">Coffee</option>
+                        <option value="candy">Candy</option>
+                        <option value="emerald">Emerald</option>
+                        <option value="muted">Muted</option>
+                        <option value="iceCream">Ice Cream</option>
+                        <option value="blueberry">Blueberry</option>
+                        <option value="midnight">Midnight</option>
+                        <option value="sunrise">Sunrise</option>
+                        <option value="redWine">Red Wine</option>
+                        <option value="seaGreen">Sea Green</option>
+                        <option value="teal">Teal</option>
+                        <option value="amber">Amber</option>
+                        <option value="cyberpunk">Cyberpunk</option>
+                        <option value="bubblegum">Bubblegum</option>
+                        <option value="fireAndIce">Fire & Ice</option>
+                        <option value="watermelon">Watermelon</option>
+                        <option value="nordic">Nordic</option>
+                        <option value="flamingo">Flamingo</option>
+                        <option value="sakura">Sakura</option>
+                        <option value="steampunk">Steampunk</option>
+                        <option value="galaxy">Galaxy</option>
+                        <option value="citrus">Citrus</option>
+                        <option value="peacock">Peacock</option>
+                        <option value="cotton">Cotton</option>
+                        <option value="aquarium">Aquarium</option>
+                        <option value="darkMode">Dark Mode</option>
+                        <option value="blueprint">Blueprint</option>
+                        <option value="candlelight">Candlelight</option>
+                        <option value="nightSky">Night Sky</option>
+                        <option value="freshMint">Fresh Mint</option>
+                        <option value="daylight">Daylight</option>
+                        <option value="aurora">Aurora</option>
+                        <option value="velvet">Velvet</option>
+                        <option value="mustard">Mustard</option>
+                        <option value="vaporwave">Vaporwave</option>
+                        <option value="terra">Terra</option>
+                        <option value="royalty">Royalty</option>
+                        <option value="rustic">Rustic</option>
+                        <option value="jade">Jade</option>
+                        <option value="summer">Summer</option>
+                        <option value="winter">Winter</option>
+                        <option value="orchid">Orchid</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="page-theme">Page Theme:</label>
+                    <select id="page-theme">
+                        <option value="default">Default</option>
+                        <option value="dark-mode">Dark Mode</option>
+                        <option value="light-mode">Light Mode</option>
+                        <option value="night-owl">Night Owl</option>
+                        <option value="sepia">Sepia</option>
+                        <option value="forest">Forest</option>
+                        <option value="ocean">Ocean</option>
+                        <option value="sunset">Sunset</option>
+                        <option value="monochrome">Monochrome</option>
+                        <option value="high-contrast">High Contrast</option>
+                        <option value="pastel">Pastel</option>
+                        <option value="neon">Neon</option>
+                        <option value="cyberpunk">Cyberpunk</option>
+                        <option value="retro">Retro</option>
+                        <option value="minimal">Minimal</option>
+                        <option value="vintage">Vintage</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="font-size">Base Font Size:</label>
+                    <select id="font-size">
+                        <option value="small">Small</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="large">Large</option>
+                        <option value="extra-large">Extra Large</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="slideshow-duration">Duration (s):</label>
+                    <input type="number" id="slideshow-duration" min="1" max="30" value="3" style="width: 60px;">
+                </div>
+                <div class="control-group">
+                    <label for="slideshow-loop">Loop:</label>
+                    <input type="checkbox" id="slideshow-loop" style="width: auto;">
+                </div>
+                <div class="control-group">
+                     <button id="sidebar-add-to-slideshow">Add to Slideshow</button>
+                </div>
+                <div class="control-group">
+                    <button id="play-slideshow">Play Slideshow</button>
+                </div>
+            </footer>
+            <footer class="bottom-footer export-footer">
+                <div class="control-group">
+                    <button id="save-scales-zip">Save All Scales as ZIP</button>
+                </div>
+                <div class="control-group">
+                    <button id="save-chords-zip">Save All Chords as ZIP</button>
+                </div>
+                <div class="control-group">
+                    <button id="save-intervals-zip">Save All Intervals as ZIP</button>
+                </div>
+            </footer>
+        </main>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="music-theory.js"></script>
+    <script src="fretboard.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

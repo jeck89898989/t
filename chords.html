@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scales Thesaurus - Chords</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add styles specific to the chords page */
+        .chords-container {
+            padding: 20px;
+            max-width: 1100px; /* Wider container for chords */
+            margin: 20px auto;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chords-container h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Filter Styles */
+        .chord-filters {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            display: grid; /* Use grid for better layout */
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .filter-section {
+            /* Container for each filter type */
+        }
+
+        .filter-section h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1em; /* Slightly smaller heading */
+            color: var(--primary-color);
+        }
+
+        .interval-filter-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .interval-filter-item {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            border: 1px solid var(--input-border);
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .interval-filter-item input[type="checkbox"] {
+            margin-right: 5px;
+            width: auto; /* Override general input width */
+            cursor: pointer;
+        }
+
+        .interval-filter-item label {
+            margin-bottom: 0; /* Override general label margin */
+            font-weight: normal;
+            font-size: 0.9em;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        #scale-filter-select {
+            width: 100%; /* Make dropdown full width */
+            padding: 8px 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            margin-top: 5px;
+        }
+
+        #clear-filters {
+            padding: 8px 15px; /* Slightly larger padding */
+            background-color: var(--secondary-color);
+            font-size: 0.9em;
+            width: auto; /* Override general button width */
+            justify-self: start; /* Align button to the left */
+        }
+        #clear-filters:hover {
+            background-color: var(--accent-color);
+        }
+
+        /* Chord List Styles */
+        .chord-list {
+            display: grid;
+            /* Adjust grid columns for potentially more info */
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .chord-item {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            background-color: var(--bg-color);
+            display: flex; /* Keep as flex for structure */
+            flex-direction: column; /* Stack details vertically */
+            transition: opacity 0.3s ease, display 0s 0.3s; /* Add transition for filtering */
+            order: 0; /* Default order */
+        }
+
+        /* Style for hidden chords */
+        .chord-item.hidden {
+            opacity: 0; /* Fade out */
+            pointer-events: none; /* Prevent interaction with hidden items */
+            height: 0; /* Collapse height */
+            padding: 0; /* Remove padding */
+            margin: 0; /* Remove margin */
+            border: none; /* Remove border */
+            overflow: hidden; /* Hide content */
+            transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out, padding 0.3s ease-in-out, margin 0.3s ease-in-out, border 0.3s ease-in-out;
+            order: 1; /* Move hidden items to the end (optional, requires parent display: grid/flex) */
+        }
+
+
+        .chord-details {
+            flex-grow: 1;
+        }
+
+        .chord-details h3 {
+            margin: 0 0 10px 0; /* More space below heading */
+            font-size: 1.2em; /* Slightly larger heading */
+            color: var(--text-color);
+            border-bottom: 1px dashed var(--border-color); /* Add separator */
+            padding-bottom: 5px;
+        }
+
+        .chord-details p {
+            margin: 0 0 5px 0; /* Space between paragraphs */
+            font-size: 0.95em;
+            color: var(--text-color);
+            line-height: 1.4;
+        }
+         .chord-details strong {
+            color: var(--primary-color); /* Highlight labels */
+         }
+
+        .chord-notes {
+            font-family: monospace; /* Monospace font for notes/formula */
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 3px 6px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        /* Re-use button styles from scales.html */
+        .hear-chord-button {
+            padding: 5px 10px;
+            font-size: 0.9em;
+            color: var(--button-text);
+            width: auto;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            background-color: var(--accent-color);
+        }
+        .hear-chord-button:hover {
+            opacity: 0.8;
+        }
+        .button-pair-container {
+             display: flex;
+             gap: 10px;
+             margin-top: 10px; /* Add margin above buttons */
+        }
+
+
+        .return-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .return-button:hover {
+            background-color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-header">
+        <div class="top-header-content">
+            <nav class="header-nav">
+                <a href="scales.html" class="header-link">Scales</a>
+                <a href="chords.html" class="header-link">Chords</a>
+                <a href="intervals.html" class="header-link">Intervals</a>
+                <a href="data.html" class="header-link">Data</a>
+                <a href="about.html" class="header-link">About</a>
+            </nav>
+            <div class="sidebar-toggle-container">
+                <button id="sidebar-toggle" aria-expanded="false" onclick="window.location.href='index.html'">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="sr-only">Go to App</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="chords-container">
+        <h1>Musical Chords</h1>
+        <p style="text-align: center; margin-bottom: 20px; font-style: italic;">
+            Explore various chord types, their structures, and example spellings based on the root note C. Filter by intervals included or scales containing the chord.
+        </p>
+
+        <!-- Filter Section -->
+        <div class="chord-filters">
+            <div class="filter-section">
+                <h2>Filter by Intervals Included</h2>
+                <div class="interval-filter-list" id="interval-filter-list">
+                    <!-- Interval filter checkboxes will be populated here -->
+                </div>
+            </div>
+             <div class="filter-section">
+                 <h2>Filter by Scale</h2>
+                 <label for="scale-filter-select" style="display: block; margin-bottom: 5px;">Show chords contained within:</label>
+                 <select id="scale-filter-select">
+                     <option value="">-- Select a Scale --</option>
+                     <!-- Scale options will be populated here -->
+                 </select>
+             </div>
+            <button id="clear-filters">Clear Filters</button>
+        </div>
+
+        <div class="chord-list" id="chord-list">
+            <!-- Chord items will be populated by JavaScript -->
+        </div>
+         <div style="text-align: center; margin-top: 30px;">
+             <a href="index.html" class="return-button">Go to Interactive Fretboard</a>
+         </div>
+    </div>
+
+    <!-- Load music theory data -->
+    <script src="music-theory.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const musicTheory = new MusicTheory();
+            const chordListContainer = document.getElementById('chord-list');
+            const intervalFilterListContainer = document.getElementById('interval-filter-list');
+            const scaleFilterSelect = document.getElementById('scale-filter-select');
+            const clearFiltersButton = document.getElementById('clear-filters');
+
+            // Get chords, intervals, and scales from MusicTheory class
+            const chords = musicTheory.chords;
+            const intervals = musicTheory.intervals;
+            const scales = musicTheory.scales;
+
+            // Keep track of all chord item elements and their data
+            let allChordData = [];
+
+            // Populate Chord List
+            const sortedChords = Object.entries(chords).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+
+            sortedChords.forEach(([id, data]) => {
+                const chordItemElement = document.createElement('div');
+                chordItemElement.className = 'chord-item';
+                chordItemElement.dataset.intervals = data.intervals.join(','); // Store intervals for filtering
+                chordItemElement.dataset.chordId = id; // Store chord ID
+                chordItemElement.dataset.chordName = data.name; // Store name for sorting
+
+                const details = document.createElement('div');
+                details.className = 'chord-details';
+
+                const nameHeading = document.createElement('h3');
+                nameHeading.textContent = data.name;
+                details.appendChild(nameHeading);
+
+                const formulaPara = document.createElement('p');
+                formulaPara.innerHTML = `<strong>Formula:</strong> <span class="chord-notes">${data.intervals.join(' - ')}</span>`;
+                details.appendChild(formulaPara);
+
+                // Get example notes based on C root for display consistency
+                const exampleNotes = musicTheory.getChordNotes('C', id);
+                const notesPara = document.createElement('p');
+                notesPara.innerHTML = `<strong>Example (C Root):</strong> <span class="chord-notes">${exampleNotes.join(' - ')}</span>`;
+                details.appendChild(notesPara);
+
+                // Container for the "Hear Chord" button
+                const buttonPairContainer = document.createElement('div');
+                buttonPairContainer.className = 'button-pair-container';
+
+                // --- Create Hear Chord Button ---
+                // This button will redirect to the main app to play the chord using Tone.js
+                const hearLink = document.createElement('a');
+                hearLink.href = `index.html?key=C&patternType=chord&pattern=${id}&action=play`;
+                hearLink.target = '_self'; // Open in the same tab
+                hearLink.style.textDecoration = 'none'; // Remove underline from the link
+
+                const hearButton = document.createElement('button');
+                hearButton.textContent = 'Hear Chord';
+                hearButton.className = 'hear-chord-button';
+
+                hearLink.appendChild(hearButton);
+                buttonPairContainer.appendChild(hearLink);
+                
+                details.appendChild(buttonPairContainer); // Append button container to details
+
+                chordItemElement.appendChild(details); // Append details container
+
+                // Don't append yet, store the data
+                allChordData.push({ id, data, element: chordItemElement });
+            });
+
+            // Populate Interval Filters
+            const sortedIntervals = Object.entries(intervals).sort(([, a], [, b]) => a.semitones - b.semitones);
+            sortedIntervals.forEach(([id, data]) => {
+                const filterItem = document.createElement('div');
+                filterItem.className = 'interval-filter-item';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `filter-${id}`;
+                checkbox.value = id;
+                checkbox.addEventListener('change', filterAndSortChords); // Call updated function
+                const label = document.createElement('label');
+                label.htmlFor = `filter-${id}`;
+                label.textContent = data.shortName;
+                filterItem.appendChild(checkbox);
+                filterItem.appendChild(label);
+                intervalFilterListContainer.appendChild(filterItem);
+            });
+
+            // Populate Scale Filter Dropdown
+            const sortedScales = Object.entries(scales).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+            sortedScales.forEach(([id, data]) => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = data.name;
+                scaleFilterSelect.appendChild(option);
+            });
+            scaleFilterSelect.addEventListener('change', filterAndSortChords); // Call updated function
+
+            // Filter and Sort Function for Chords
+            function filterAndSortChords() {
+                const selectedIntervals = Array.from(intervalFilterListContainer.querySelectorAll('input[type="checkbox"]:checked'))
+                                               .map(cb => cb.value);
+                const selectedScaleId = scaleFilterSelect.value;
+
+                let scaleIntervalsSet = null;
+                if (selectedScaleId && scales[selectedScaleId]) {
+                    scaleIntervalsSet = new Set(scales[selectedScaleId].intervals);
+                }
+
+                // 1. Filter the data
+                const visibleChordsData = allChordData.filter(itemData => {
+                    const chordIntervals = itemData.data.intervals;
+                    const chordId = itemData.id;
+
+                    // Check Interval Filter
+                    const passesIntervalFilter = selectedIntervals.length === 0 ||
+                                                 selectedIntervals.every(filterInterval => chordIntervals.includes(filterInterval));
+
+                    // Check Scale Filter
+                    const passesScaleFilter = !scaleIntervalsSet ||
+                                               chordIntervals.every(chordInterval => scaleIntervalsSet.has(chordInterval));
+
+                    return passesIntervalFilter && passesScaleFilter;
+                });
+
+                // 2. Sort the filtered data (alphabetically by name)
+                visibleChordsData.sort((a, b) => a.data.name.localeCompare(b.data.name));
+
+                // 3. Update the DOM
+                chordListContainer.innerHTML = ''; // Clear the container
+                visibleChordsData.forEach(itemData => {
+                    chordListContainer.appendChild(itemData.element); // Append sorted visible items
+                    itemData.element.classList.remove('hidden'); // Ensure it's visible
+                });
+
+                // Handle items that are filtered out by adding the 'hidden' class
+                allChordData.forEach(itemData => {
+                     if (!visibleChordsData.some(visible => visible.id === itemData.id)) {
+                          itemData.element.classList.add('hidden');
+                     }
+                 });
+            }
+
+            // Clear Filters Button
+            clearFiltersButton.addEventListener('click', () => {
+                intervalFilterListContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                scaleFilterSelect.selectedIndex = 0;
+                filterAndSortChords(); // Re-run filter and sort
+            });
+
+            // Initial population and sort/filter run
+            filterAndSortChords();
+        });
+    </script>
+</body>
+</html>

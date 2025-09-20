@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scales Thesaurus - Intervals</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add styles specific to the intervals page */
+        .intervals-container {
+            padding: 20px;
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .intervals-container h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Filter Styles for Intervals */
+        .interval-filters {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust columns */
+            gap: 15px;
+        }
+
+        .filter-section h2 { /* Reuse existing filter section styles if possible */
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: var(--primary-color);
+        }
+
+        .filter-section label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .filter-section select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        #clear-interval-filters { /* Unique ID for the button */
+            padding: 8px 15px;
+            background-color: var(--secondary-color);
+            color: var(--button-text);
+            font-size: 0.9em;
+            width: auto;
+            justify-self: start;
+            grid-column: 1 / -1; /* Make button span full width if needed, or adjust layout */
+            margin-top: 10px;
+        }
+        #clear-interval-filters:hover {
+            background-color: var(--accent-color);
+        }
+
+
+        .interval-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .interval-item {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            /* align-items: center; */ /* Remove center align to keep buttons left */
+            transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out, padding 0.3s ease-in-out, margin 0.3s ease-in-out, border 0.3s ease-in-out; /* Update transition */
+            order: 0; /* Default order */
+        }
+
+        /* Style for hidden intervals */
+        .interval-item.hidden {
+            opacity: 0;
+            pointer-events: none;
+            height: 0; /* Collapse height */
+            padding: 0; /* Remove padding */
+            margin: 0; /* Remove margin */
+            border: none; /* Remove border */
+            overflow: hidden; /* Hide content */
+            order: 1; /* Move hidden items to the end */
+        }
+
+
+        .interval-color-swatch {
+            width: 25px;
+            height: 25px;
+            border-radius: 4px;
+            margin-right: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .interval-details {
+            flex-grow: 1;
+        }
+
+        .interval-details h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.1em;
+            color: var(--text-color);
+        }
+
+        .interval-details p {
+            margin: 0;
+            font-size: 0.9em;
+            color: var(--text-color);
+        }
+
+        .button-pair-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        /* Shared button styles (reuse from scales.css if possible) */
+        .hear-interval-button, .view-diagram-button, .learn-button {
+            padding: 5px 10px;
+            font-size: 0.9em;
+            color: var(--button-text);
+            width: auto;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            text-align: center;
+            flex-grow: 1;
+        }
+        
+        .view-diagram-button {
+            background-color: var(--secondary-color);
+        }
+
+        .learn-button { /* Use the same class as scales/chords */
+            background-color: var(--primary-color);
+        }
+
+        .hear-interval-button:hover, .view-diagram-button:hover, .learn-button:hover {
+            opacity: 0.8;
+        }
+
+        .return-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .return-button:hover {
+            background-color: var(--secondary-color);
+        }
+         /* Style for audio player */
+        .interval-item audio {
+            width: 100%;
+            margin-top: 15px;
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-header">
+        <div class="top-header-content">
+            
+            <div class="header-nav">
+                <a href="scales.html" class="header-link">Scales</a>
+                <a href="chords.html" class="header-link">Chords</a>
+                <a href="intervals.html" class="header-link">Intervals</a>
+                <a href="data.html" class="header-link">Data</a>
+                <a href="about.html" class="header-link">About</a>
+            </div>
+            <div class="sidebar-toggle-container">
+                <button id="sidebar-toggle" aria-expanded="false" onclick="window.location.href='index.html'">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="sr-only">Go to App</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="intervals-container">
+        <h1>Musical Intervals</h1>
+        <p style="text-align: center; margin-bottom: 20px; font-style: italic;">
+            The building blocks of melody and harmony. Filter by the intervals found within specific chords or scales.
+        </p>
+
+        <!-- Filter Section -->
+        <div class="interval-filters">
+            <div class="filter-section">
+                <label for="chord-filter-select">Show intervals in Chord:</label>
+                <select id="chord-filter-select">
+                    <option value="">-- All Chords --</option>
+                    <!-- Chord options will be populated here -->
+                </select>
+            </div>
+            <div class="filter-section">
+                <label for="scale-filter-select">Show intervals in Scale:</label>
+                <select id="scale-filter-select">
+                    <option value="">-- All Scales --</option>
+                    <!-- Scale options will be populated here -->
+                </select>
+            </div>
+            <button id="clear-interval-filters">Clear Filters</button>
+        </div>
+
+        <div class="interval-list" id="interval-list">
+            <!-- Interval items will be populated by JavaScript -->
+        </div>
+        <div style="text-align: center;">
+            <a href="index.html" class="return-button">Go to Interactive Fretboard</a>
+        </div>
+    </div>
+
+    <!-- Load music theory data -->
+    <script src="music-theory.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const musicTheory = new MusicTheory();
+            const intervalListContainer = document.getElementById('interval-list');
+            const chordFilterSelect = document.getElementById('chord-filter-select');
+            const scaleFilterSelect = document.getElementById('scale-filter-select');
+            const clearFiltersButton = document.getElementById('clear-interval-filters'); // Use the new ID
+
+            // Get intervals, chords, and scales from MusicTheory class
+            const intervals = musicTheory.intervals;
+            const chords = musicTheory.chords;
+            const scales = musicTheory.scales;
+
+            let allIntervalData = []; // Keep track of interval elements and their data
+
+            // Sort intervals by semitone count for initial display logic
+            const sortedIntervals = Object.entries(intervals).sort(([, a], [, b]) => a.semitones - b.semitones);
+
+            // Populate the list
+            sortedIntervals.forEach(([id, data]) => {
+                const intervalItemElement = document.createElement('div');
+                intervalItemElement.className = 'interval-item';
+                intervalItemElement.dataset.intervalId = id; // Store interval ID for filtering
+                intervalItemElement.dataset.intervalName = data.name; // Store name for sorting
+
+                // Main container for swatch and details
+                const mainContentDiv = document.createElement('div');
+                mainContentDiv.style.display = 'flex';
+                mainContentDiv.style.alignItems = 'center';
+                mainContentDiv.style.width = '100%'; // Ensure it takes full width for details
+
+                // Color swatch
+                const colorSwatch = document.createElement('div');
+                colorSwatch.className = 'interval-color-swatch';
+                colorSwatch.style.backgroundColor = data.color;
+                mainContentDiv.appendChild(colorSwatch);
+
+                // Details
+                const details = document.createElement('div');
+                details.className = 'interval-details';
+
+                const nameHeading = document.createElement('h3');
+                nameHeading.textContent = `${data.name} (${data.shortName})`;
+                details.appendChild(nameHeading);
+
+                const semitonesPara = document.createElement('p');
+                semitonesPara.textContent = `Semitones: ${data.semitones}`;
+                details.appendChild(semitonesPara);
+
+                mainContentDiv.appendChild(details);
+                intervalItemElement.appendChild(mainContentDiv);
+
+                // --- Add MP3 Player ---
+                const audioPlayer = document.createElement('audio');
+                audioPlayer.controls = true;
+                // Set dummy path using forward slashes
+                audioPlayer.src = 'C:/dummy.mp3';
+                audioPlayer.style.width = '100%'; // Make player fit width
+                audioPlayer.style.marginTop = '15px'; // Add space above player
+                audioPlayer.style.height = '40px'; // Standard height
+                intervalItemElement.appendChild(audioPlayer); // Append the audio player
+
+                // Don't append yet, store data and element
+                allIntervalData.push({ id, data, element: intervalItemElement });
+            });
+
+            // Populate Chord Filter Dropdown
+            const sortedChords = Object.entries(chords).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+            sortedChords.forEach(([id, data]) => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = data.name;
+                chordFilterSelect.appendChild(option);
+            });
+
+            // Populate Scale Filter Dropdown
+            const sortedScales = Object.entries(scales).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+            sortedScales.forEach(([id, data]) => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = data.name;
+                scaleFilterSelect.appendChild(option);
+            });
+
+            // Filter and Sort Function for Intervals
+            function filterAndSortIntervals() {
+                const selectedChordId = chordFilterSelect.value;
+                const selectedScaleId = scaleFilterSelect.value;
+
+                let allowedIntervals = null; // Set of intervals to show
+
+                if (selectedChordId) {
+                    allowedIntervals = new Set(chords[selectedChordId]?.intervals || []);
+                } else if (selectedScaleId) {
+                    allowedIntervals = new Set(scales[selectedScaleId]?.intervals || []);
+                }
+
+                // 1. Filter the interval data
+                const visibleIntervalsData = allIntervalData.filter(itemData => {
+                    const intervalId = itemData.id;
+                    // If a filter is active, check if the interval is allowed
+                    if (allowedIntervals) {
+                        return allowedIntervals.has(intervalId);
+                    }
+                    return true; // Otherwise, show all intervals
+                });
+
+                // 2. Sort the filtered data alphabetically by name
+                visibleIntervalsData.sort((a, b) => a.data.name.localeCompare(b.data.name));
+
+                // 3. Update the DOM
+                intervalListContainer.innerHTML = ''; // Clear the container
+                visibleIntervalsData.forEach(itemData => {
+                    intervalListContainer.appendChild(itemData.element); // Append sorted visible items
+                    itemData.element.classList.remove('hidden'); // Ensure it's visible
+                });
+
+            }
+
+            // Event Listeners
+            chordFilterSelect.addEventListener('change', () => {
+                if (chordFilterSelect.value) {
+                    scaleFilterSelect.value = ''; // Reset scale filter if chord is selected
+                }
+                filterAndSortIntervals(); // Call the updated function
+            });
+
+            scaleFilterSelect.addEventListener('change', () => {
+                if (scaleFilterSelect.value) {
+                    chordFilterSelect.value = ''; // Reset chord filter if scale is selected
+                }
+                filterAndSortIntervals(); // Call the updated function
+            });
+
+            clearFiltersButton.addEventListener('click', () => {
+                chordFilterSelect.value = '';
+                scaleFilterSelect.value = '';
+                filterAndSortIntervals(); // Show all intervals, sorted
+            });
+
+            // Initial population and sort/filter run (shows all initially, sorted)
+            filterAndSortIntervals();
+        });
+    </script>
+</body>
+</html>

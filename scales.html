@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scales Thesaurus - Scales</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add styles specific to the scales page */
+        .scales-container {
+            padding: 20px;
+            max-width: 1100px;
+            margin: 20px auto;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .scales-container h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .scale-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .scale-item {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.3s ease;
+            position: relative;
+        }
+
+        .scale-item.hidden {
+            opacity: 0;
+            pointer-events: none;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+            overflow: hidden;
+            transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out, padding 0.3s ease-in-out, margin 0.3s ease-in-out, border 0.3s ease-in-out;
+        }
+
+        .scale-details {
+            flex-grow: 1;
+        }
+
+        .scale-details h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+            color: var(--text-color);
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+            padding-right: 30px;
+        }
+
+        .scale-details p {
+            margin: 0 0 5px 0;
+            font-size: 0.95em;
+            color: var(--text-color);
+            line-height: 1.4;
+        }
+
+        .scale-details strong {
+            color: var(--primary-color);
+        }
+
+        .scale-notes {
+            font-family: monospace;
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 3px 6px;
+            border-radius: 3px;
+            display: inline-block;
+            word-break: break-all;
+        }
+
+        .scale-filters {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        /* Favorite Filter Style */
+        .favorite-filter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .favorite-filter label {
+            margin-bottom: 0;
+            font-weight: 600;
+        }
+        .favorite-filter input[type="checkbox"] {
+            width: auto;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .return-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-top: 30px;
+        }
+
+        .return-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .hear-scale-button, .view-diagram-button, .learn-button { 
+            padding: 5px 10px;
+            font-size: 0.9em;
+            color: var(--button-text);
+            width: auto;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            text-align: center; 
+            flex-grow: 1; 
+        }
+        .hear-scale-button {
+            background-color: var(--accent-color);
+        }
+        .view-diagram-button {
+            background-color: var(--secondary-color);
+        }
+        .learn-button { 
+             background-color: var(--primary-color);
+        }
+        .hear-scale-button:hover, .view-diagram-button:hover, .learn-button:hover {
+            opacity: 0.8;
+        }
+        .button-pair-container { 
+             display: flex;
+             gap: 10px; 
+             margin-top: 10px;
+        }
+        /* Favorite Button Styles */
+        .favorite-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5em; 
+            cursor: pointer;
+            color: var(--border-color); 
+            padding: 0;
+            line-height: 1;
+            transition: color 0.2s ease;
+        }
+        .favorite-button.favorited {
+            color: var(--accent-color); 
+        }
+        .favorite-button:hover {
+            color: var(--secondary-color); 
+        }
+        
+        /* Add styles for the embedded audio player */
+        .scale-item audio {
+            width: 100%;
+            margin-top: 15px; /* Add space above the player */
+            height: 40px; /* Standard height for controls */
+        }
+
+        /* Adjust button container margin if needed */
+        .button-pair-container {
+             display: flex;
+             gap: 10px;
+             margin-top: 10px; /* Keep margin */
+             /* Removed margin-bottom to let audio player sit below */
+        }
+    </style>
+</head>
+<body>
+    <div class="top-header">
+        <div class="top-header-content">
+            
+            <div class="header-nav">
+                <a href="scales.html" class="header-link">Scales</a>
+                <a href="chords.html" class="header-link">Chords</a>
+                <a href="intervals.html" class="header-link">Intervals</a>
+                <a href="data.html" class="header-link">Data</a>
+                <a href="about.html" class="header-link">About</a>
+            </div>
+            <div class="sidebar-toggle-container">
+                <button id="sidebar-toggle" aria-expanded="false" onclick="window.location.href='index.html'">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="sr-only">Go to App</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="scales-container">
+        <h1>Musical Scales</h1>
+         <p style="text-align: center; margin-bottom: 20px; font-style: italic;">
+            Explore a wide variety of musical scales, their formulas (intervals), and example spellings based on the root note C. Filter by the intervals they contain or show only your favorites.
+        </p>
+
+        <!-- Filter Section for Scales -->
+        <div class="scale-filters">
+            <div class="filter-section">
+                <h2>Filter by Intervals Included</h2>
+                <div class="interval-filter-list" id="interval-filter-list">
+                    <!-- Interval filter checkboxes will be populated here -->
+                </div>
+            </div>
+             <!-- Add Favorite Filter Checkbox -->
+            <div class="filter-section favorite-filter">
+                <input type="checkbox" id="show-favorites-only">
+                <label for="show-favorites-only">Show Favorites Only</label>
+            </div>
+            <button id="clear-filters">Clear Filters</button>
+        </div>
+
+        <div class="scale-list" id="scale-list">
+            <!-- Scale items will be populated by JavaScript -->
+        </div>
+        <div style="text-align: center;">
+             <a href="index.html" class="return-button">Go to Interactive Fretboard</a>
+         </div>
+    </div>
+
+    <!-- Load music theory data -->
+    <script src="music-theory.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const musicTheory = new MusicTheory();
+            const scaleListContainer = document.getElementById('scale-list');
+            const intervalFilterListContainer = document.getElementById('interval-filter-list');
+            const clearFiltersButton = document.getElementById('clear-filters');
+            const showFavoritesCheckbox = document.getElementById('show-favorites-only');
+
+            // Load favorites from localStorage
+            let favoriteScales = JSON.parse(localStorage.getItem('favoriteScales') || '{}');
+
+            // Get scales and intervals from MusicTheory class
+            const scales = musicTheory.scales;
+            const intervals = musicTheory.intervals;
+
+            // Store all created scale item elements and their associated data
+            let allScaleData = [];
+
+            // Populate the Scale List
+            const sortedScaleEntries = Object.entries(scales).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+
+            sortedScaleEntries.forEach(([id, data]) => {
+                const scaleItemElement = document.createElement('div');
+                scaleItemElement.className = 'scale-item';
+                scaleItemElement.dataset.intervals = data.intervals.join(',');
+                scaleItemElement.dataset.scaleId = id;
+                scaleItemElement.dataset.scaleName = data.name; // Store name for sorting
+
+                const details = document.createElement('div');
+                details.className = 'scale-details';
+
+                const nameHeading = document.createElement('h3');
+                nameHeading.textContent = data.name;
+                details.appendChild(nameHeading);
+
+                const formulaPara = document.createElement('p');
+                formulaPara.innerHTML = `<strong>Formula:</strong> <span class="scale-notes">${data.intervals.join(' - ')}</span>`;
+                details.appendChild(formulaPara);
+
+                const exampleNotes = musicTheory.getScaleNotes('C', id);
+                const notesPara = document.createElement('p');
+                notesPara.innerHTML = `<strong>Example (C Root):</strong> <span class="scale-notes">${exampleNotes.join(' - ')}</span>`;
+                details.appendChild(notesPara);
+
+                const relatedModes = musicTheory.getRelatedModes(id);
+                if (relatedModes.length > 0) {
+                    const modesPara = document.createElement('p');
+                    modesPara.innerHTML = `<strong>Related Modes:</strong> ${relatedModes.join(', ') || 'None'}`; // Add fallback
+                    details.appendChild(modesPara);
+                }
+
+                const relatedChords = musicTheory.getRelatedChords('C', id, 3);
+                if (relatedChords.length > 0) {
+                     const chordsPara = document.createElement('p');
+                     let romanNumerals = [];
+                     // Basic Roman numeral logic (can be expanded)
+                     if (id.includes('major')) {
+                         romanNumerals = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii°'];
+                     } else if (id.includes('natural_minor')) { // More specific check
+                         romanNumerals = ['i', 'ii°', 'III', 'iv', 'v', 'VI', 'VII'];
+                     } else if (id.includes('harmonic_minor')) {
+                         romanNumerals = ['i', 'ii°', 'III+', 'iv', 'V', 'VI', 'vii°'];
+                     } else if (id.includes('melodic_minor')) { // Ascending form often used
+                         romanNumerals = ['i', 'ii', 'III+', 'IV', 'V', 'vi°', 'vii°'];
+                     } else {
+                         // Default or fallback if type is not easily determined
+                         romanNumerals = relatedChords.map((_, index) => `${index + 1}?`);
+                     }
+                     // Ensure romanNumerals array matches length, padding if necessary
+                     while (romanNumerals.length < relatedChords.length) {
+                         romanNumerals.push('?');
+                     }
+
+                     const chordDisplay = relatedChords.map((chord, index) => `${romanNumerals[index]}: ${chord}`).join(', ');
+                     chordsPara.innerHTML = `<strong>Related Chords (Triads in C):</strong> ${chordDisplay}`;
+                     details.appendChild(chordsPara);
+                }
+
+                scaleItemElement.appendChild(details); // Add details first
+
+                // --- Add MP3 Player ---
+                const audioPlayer = document.createElement('audio');
+                audioPlayer.controls = true;
+                // Set dummy path using forward slashes or escape backslashes correctly
+                audioPlayer.src = 'C:/dummy.mp3'; // Use forward slash or escape backslash
+                scaleItemElement.appendChild(audioPlayer); // Append the audio player
+
+                const favButton = document.createElement('button');
+                favButton.className = 'favorite-button';
+                favButton.innerHTML = '&#9734;';
+                favButton.title = 'Toggle Favorite';
+                if (favoriteScales[id]) {
+                    favButton.classList.add('favorited');
+                    favButton.innerHTML = '&#9733;';
+                }
+                favButton.addEventListener('click', (e) => {
+                     e.stopPropagation(); // Prevent clicks passing to the scale item
+                    toggleFavorite(id, favButton, scaleItemElement);
+                });
+                scaleItemElement.appendChild(favButton);
+
+                // Store the element and its data together
+                allScaleData.push({ id, data, element: scaleItemElement });
+            });
+
+            // Populate Interval Filters
+            const sortedIntervals = Object.entries(intervals).sort(([, a], [, b]) => a.semitones - b.semitones);
+            sortedIntervals.forEach(([id, data]) => {
+                const filterItem = document.createElement('div');
+                filterItem.className = 'interval-filter-item';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `filter-${id}`;
+                checkbox.value = id;
+                checkbox.addEventListener('change', filterAndSortScales);
+                const label = document.createElement('label');
+                label.htmlFor = `filter-${id}`;
+                label.textContent = data.shortName;
+                filterItem.appendChild(checkbox);
+                filterItem.appendChild(label);
+                intervalFilterListContainer.appendChild(filterItem);
+            });
+
+             // Add event listener for the favorite filter checkbox
+            showFavoritesCheckbox.addEventListener('change', filterAndSortScales);
+
+            // Toggle Favorite Function
+            function toggleFavorite(scaleId, buttonElement, itemElement) {
+                if (favoriteScales[scaleId]) {
+                    delete favoriteScales[scaleId];
+                    buttonElement.classList.remove('favorited');
+                    buttonElement.innerHTML = '&#9734;';
+                    itemElement.dataset.isFavorite = 'false'; // Update dataset
+                } else {
+                    favoriteScales[scaleId] = true;
+                    buttonElement.classList.add('favorited');
+                    buttonElement.innerHTML = '&#9733;';
+                    itemElement.dataset.isFavorite = 'true'; // Update dataset
+                }
+                localStorage.setItem('favoriteScales', JSON.stringify(favoriteScales));
+                // Re-apply filters and sorting
+                filterAndSortScales();
+            }
+
+            // Filter and Sort Function for Scales
+            function filterAndSortScales() {
+                const selectedIntervals = Array.from(intervalFilterListContainer.querySelectorAll('input[type="checkbox"]:checked'))
+                                               .map(cb => cb.value);
+                const showOnlyFavorites = showFavoritesCheckbox.checked;
+
+                // 1. Filter the data
+                const visibleScalesData = allScaleData.filter(itemData => {
+                    const scaleIntervals = itemData.data.intervals; // Access intervals from stored data
+                    const scaleId = itemData.id;
+
+                    // Check Interval Filter
+                    const passesIntervalFilter = selectedIntervals.length === 0 ||
+                                                 selectedIntervals.every(filterInterval => scaleIntervals.includes(filterInterval));
+
+                    // Check Favorite Filter
+                    const passesFavoriteFilter = !showOnlyFavorites || favoriteScales[scaleId];
+
+                    return passesIntervalFilter && passesFavoriteFilter;
+                });
+
+                // 2. Sort the filtered data (alphabetically by name)
+                visibleScalesData.sort((a, b) => a.data.name.localeCompare(b.data.name));
+
+                // 3. Update the DOM
+                scaleListContainer.innerHTML = ''; // Clear the container
+                visibleScalesData.forEach(itemData => {
+                    scaleListContainer.appendChild(itemData.element); // Append sorted visible items
+                    itemData.element.classList.remove('hidden'); // Ensure it's visible
+                });
+
+                 // Handle items that are filtered out by adding the 'hidden' class
+                 allScaleData.forEach(itemData => {
+                     if (!visibleScalesData.some(visible => visible.id === itemData.id)) {
+                          itemData.element.classList.add('hidden');
+                          // Optionally append hidden items if you want them in the DOM but hidden
+                          // scaleListContainer.appendChild(itemData.element);
+                     }
+                 });
+            }
+
+            // Clear Filters Button
+            clearFiltersButton.addEventListener('click', () => {
+                intervalFilterListContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                showFavoritesCheckbox.checked = false;
+                filterAndSortScales(); // Re-filter and sort
+            });
+
+            // Initial population and sort/filter run
+            filterAndSortScales();
+        });
+    </script>
+</body>
+</html>

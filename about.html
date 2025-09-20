@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scales Thesaurus - About</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Use a standard container style, remove construction styles */
+        .about-container {
+            padding: 30px 20px;
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            line-height: 1.7; /* Improve readability */
+            font-size: 1.05em; /* Slightly larger base font */
+        }
+
+        .about-container h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            font-size: 2.5em; /* Larger main heading */
+        }
+
+        .about-container h2 {
+            color: var(--primary-color);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .about-container p {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .about-container ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            list-style: disc;
+        }
+
+        .about-container li {
+            margin-bottom: 10px;
+        }
+
+        .team-member {
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .team-member strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+            color: var(--secondary-color);
+        }
+
+        .return-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-top: 20px; /* Space above the button */
+        }
+
+        .return-button:hover {
+            background-color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-header">
+        <div class="top-header-content">
+            <div class="logo">MR</div>
+            <div class="header-nav">
+                <a href="scales.html" class="header-link">Scales</a>
+                <a href="chords.html" class="header-link">Chords</a>
+                <a href="intervals.html" class="header-link">Intervals</a>
+                <a href="data.html" class="header-link">Data</a>
+                <a href="about.html" class="header-link">About</a>
+            </div>
+            <div class="sidebar-toggle-container">
+                <button id="sidebar-toggle" aria-expanded="false" onclick="window.location.href='index.html'">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="sr-only">Go to App</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="about-container">
+        <h1>About the Scales Thesaurus</h1>
+
+        <p>Welcome to the Scales Thesaurus, your comprehensive interactive guide to the world of musical scales, chords, intervals, and music theory. Our mission is to provide musicians of all levels – from curious beginners to seasoned professionals – with powerful, intuitive tools to explore, understand, and apply music theory concepts.</p>
+
+        <h2>Our Vision</h2>
+        <p>We believe that understanding music theory shouldn't be a barrier to creativity, but a gateway. The Scales Thesaurus was born from a desire to demystify complex musical structures and make learning engaging and practical. We aim to bridge the gap between abstract theory and tangible application on your instrument.</p>
+
+        <h2>Key Features</h2>
+        <ul>
+            <li><strong>Interactive Fretboard:</strong> Visualize scales, chords, and intervals on a customizable fretboard for various stringed instruments.</li>
+            <li><strong>Extensive Library:</strong> Explore hundreds of scales and chords, complete with formulas, spellings, and audio playback.</li>
+            <li><strong>Customization Galore:</strong> Tailor the appearance, instrument setup, and display modes to fit your learning style and needs.</li>
+            <li><strong>Pattern Playback:</strong> Hear scales and chords played back, helping to connect the visual patterns with the sound.</li>
+            <li><strong>Melodic Patterns:</strong> Practice scales using various melodic sequences to improve technique and ear training.</li>
+            <li><strong>Theory Info Panel:</strong> Get detailed information about the selected pattern, including quality, related modes, and descriptions.</li>
+            <li><strong>Export & Share:</strong> Save diagrams as images or create slideshows to study or share your findings.</li>
+            <li><strong>Filtering & Favorites:</strong> Easily find specific scales or chords using interval filters or mark your favorites for quick access.</li>
+        </ul>
+
+        <h2>Who We Are (Placeholder)</h2>
+        <p>The Scales Thesaurus is developed by a passionate team of musicians, educators, and developers dedicated to creating high-quality music learning resources. We combine our expertise in music theory, pedagogy, and software development to build tools that are both powerful and easy to use.</p>
+        <div class="team-member">
+            <strong>Lead Developer:</strong> [Developer Name/Alias] - Focused on bringing the technical vision to life.
+        </div>
+        <div class="team-member">
+            <strong>Music Theory Consultant:</strong> [Consultant Name/Alias] - Ensuring accuracy and pedagogical soundness.
+        </div>
+        <div class="team-member">
+            <strong>UI/UX Designer:</strong> [Designer Name/Alias] - Crafting an intuitive and visually appealing experience.
+        </div>
+
+        <h2>Get Involved</h2>
+        <p>We are constantly working to improve the Scales Thesaurus and add new features. Your feedback is invaluable! If you have suggestions, find a bug, or want to contribute, please don't hesitate to reach out (Contact details coming soon!).</p>
+
+        <div style="text-align: center;">
+            <a href="index.html" class="return-button">Explore the Interactive Fretboard</a>
+        </div>
+    </div>
+</body>
+</html>
