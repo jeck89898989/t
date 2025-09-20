@@ -2,7 +2,6 @@
 <head>
     <title>Scales Thesaurus</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Add JSZip library for ZIP file creation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
@@ -11,10 +10,8 @@
             <section>
                 <h2 class="sidebar-heading">Music Theory</h2>
                 <div class="music-theory">
-                    
                 </div>
             </section>
-            
             <section>
                 <h2 class="sidebar-heading">Appearance</h2>
                 <div class="appearance">
@@ -22,18 +19,14 @@
                         <label for="string-height">String Height (px):</label>
                         <input type="number" id="string-height" min="1" max="20" value="1">
                     </div>
-                    
                     <div class="control-group">
                         <label for="fret-width">Fret Width (px):</label>
                         <input type="number" id="fret-width" min="1" max="20" value="1">
                     </div>
-                    
                     <div id="custom-colors" style="display: none;">
-                        <!-- Custom color inputs will be shown here -->
                     </div>
                 </div>
             </section>
-            
             <section>
                 <h2 class="sidebar-heading">Instrument Setup</h2>
                 <div class="instrument-setup">
@@ -41,31 +34,24 @@
                         <label for="string-count">Number of Strings:</label>
                         <input type="number" id="string-count" min="1" max="20" value="6">
                     </div>
-                    
                     <div id="tuning-container">
-                        <!-- Tuning inputs will be added here dynamically -->
                     </div>
                 </div>
             </section>
-            
             <section>
                 <h2 class="sidebar-heading">Chromatic Tuner</h2>
                 <div class="chromatic-tuner-controls">
                     <button id="chromatic-tuner-toggle">Show Chromatic Tuner</button>
                     <div id="chromatic-tuner-container" style="display: none;">
                          <div class="chromatic-tuner-buttons">
-                             <!-- Note buttons will be generated dynamically -->
                          </div>
                     </div>
                 </div>
             </section>
-            
             <section>
                 <h2 class="sidebar-heading">Slideshow</h2>
                 <div class="slideshow-options">
-                    
                     <div class="slideshow-controls">
-                        
                         <button id="export-all">Export All</button>
                         <button id="export-diagrams-only">Export Diagrams Only</button>
                         <button id="set-filename">Set Filename</button>
@@ -73,7 +59,6 @@
                     </div>
                 </div>
             </section>
-            
             <section>
                 <h2 class="sidebar-heading">Melodic Patterns</h2>
                 <div class="melodic-patterns">
@@ -133,21 +118,17 @@
                     </div>
                 </div>
             </section>
-            
             <section>
                 <h2 class="sidebar-heading">Export</h2>
                 <div class="export-section" style="padding: 10px;">
                     <button id="save-all-scales" style="width: 100%; padding: 10px; font-size: 14px;">Save All Scales for All Keys as jpgs</button>
                     <button id="save-all-chords" style="width: 100%; padding: 10px; font-size: 14px; margin-top: 10px;">Save All Chords for All Keys as jpgs</button>
                     <button id="save-all-intervals" style="width: 100%; padding: 10px; font-size: 14px; margin-top: 10px;">Save All Intervals for All Keys as jpgs</button>
-                    
-                    <!-- Buttons for exporting all string counts -->
                     <button id="save-scales-all-strings-zip" style="width: 100%; padding: 10px; font-size: 14px; margin-top: 20px; background-color: #e67e22;">Save All Scales (1-Max Strings) as ZIP</button>
                     <button id="save-chords-all-strings-zip" style="width: 100%; padding: 10px; font-size: 14px; margin-top: 10px; background-color: #e67e22;">Save All Chords (1-Max Strings) as ZIP</button>
                     <button id="save-intervals-all-strings-zip" style="width: 100%; padding: 10px; font-size: 14px; margin-top: 10px; background-color: #e67e22;">Save All Intervals (1-Max Strings) as ZIP</button>
                 </div>
             </section>
-            
             <section>
                 <h2 class="sidebar-heading">Pattern Generator</h2>
                 <div class="pattern-generator-controls">
@@ -157,7 +138,6 @@
                 </div>
             </section>
         </aside>
-        
         <main class="main-content">
             <header class="top-header">
                 <h1 class="main-title">Scales Thesaurus</h1>
@@ -179,25 +159,20 @@
                     </div>
                 </div>
             </header>
-            
             <div class="fretboard-container">
                 <div id="fretboard"></div>
             </div>
-            
             <div class="slideshow-container">
                 <div id="slideshow-items"></div>
             </div>
-            
             <div class="pattern-generator">
                 <div id="generated-patterns"></div>
             </div>
-            
             <div class="fretboard-controls">
                 <button id="play-pattern">Play Pattern</button>
                 <button id="add-to-slideshow">Add to Slideshow</button>
                 <button id="export-diagram">Export Diagram</button>
             </div>
-
             <footer class="bottom-footer">
                 <div class="control-group">
                     <label for="key-select">Key:</label>
@@ -229,7 +204,6 @@
                 <div class="control-group">
                     <label for="pattern-select">Pattern:</label>
                     <select id="pattern-select">
-                        <!-- Options will be populated based on pattern type -->
                     </select>
                 </div>
                 <div class="control-group">
@@ -385,7 +359,6 @@
             </footer>
         </main>
     </div>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="music-theory.js"></script>
