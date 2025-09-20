@@ -1,35 +1,20 @@
-/**
- * Main Application Class
- * Controls the UI, fretboard, and audio playback
- */
 class App {
     constructor() {
-        // Initialize music theory and fretboard
         this.musicTheory = new MusicTheory();
         this.fretboard = new Fretboard('fretboard', this.musicTheory);
-        
-        // Audio synth
         this.synth = null;
         this.initSynth();
-        
-        // State
         this.slideshowItems = [];
         this.generatedPatterns = [];
-        this.tempo = 120; // Default tempo (BPM)
-        this.customFilename = null; // Custom filename for exports
-        this.sidebarVisible = true; // default state
+        this.tempo = 120;
+        this.customFilename = null;
+        this.sidebarVisible = true;
         const savedSidebar = localStorage.getItem('sidebarVisible');
         if (savedSidebar !== null) {
             this.sidebarVisible = savedSidebar === 'true';
         }
-        
-        // NEW: Set titleVisible to true by default
         this.titleVisible = true;
-        
-        // Initialize collapsed state for sections
         this.collapsedSections = JSON.parse(localStorage.getItem('collapsedSections')) || {};
-        
-        // Instrument presets
         this.instrumentPresets = {
             'acoustic_guitar': { name: 'Acoustic Guitar', strings: 6, tunings: {
                 'standard': ['E', 'A', 'D', 'G', 'B', 'E'],
@@ -161,8 +146,6 @@ class App {
                 'turkish': ['D', 'E', 'A', 'B', 'E', 'A']
             }}
         };
-        
-        // Add 50 default chord progression patterns.
         this.chordProgressionPatterns = [];
         for (let i = 1; i <= 50; i++) {
             this.chordProgressionPatterns.push({
@@ -171,8 +154,6 @@ class App {
                 progression: 'I:4 IV:4 V:4'
             });
         }
-        
-        // Initialize lessons array from localStorage or create 50 default lessons
         const storedLessons = localStorage.getItem('lessons');
         if (storedLessons) {
             this.lessons = JSON.parse(storedLessons);
@@ -187,108 +168,45 @@ class App {
             }
             localStorage.setItem('lessons', JSON.stringify(this.lessons));
         }
-        
-        // Add instrument and tuning dropdowns
         this.addInstrumentDropdowns();
-        
-        // State
         this.slideshowItems = [];
         this.generatedPatterns = [];
-        this.tempo = 120; // Default tempo (BPM)
-        this.customFilename = null; // Custom filename for exports
-        
-        // Initialize the UI
+        this.tempo = 120;
+        this.customFilename = null; 
         this.initUI();
     }
-    
-    /**
-     * Initialize Tone.js synthesizer
-     */
     async initSynth() {
-        // Wait for user interaction before initializing audio
         await Tone.start();
-        
-        // Create a polyphonic synth for playing chords/patterns
         this.synth = new Tone.PolySynth(Tone.Synth).toDestination();
         this.synth.volume.value = -10; // Reduce volume a bit
-        
         console.log('Audio synthesizer initialized');
     }
-    
-    /**
-     * Initialize the UI and set up event listeners
-     */
     initUI() {
-        // Add backdrop for sidebar
         const backdrop = document.createElement('div');
         backdrop.className = 'sidebar-backdrop';
         backdrop.addEventListener('click', () => this.toggleSidebar());
         document.body.appendChild(backdrop);
-        
-        // Load and apply default settings first
         this.loadAndApplyDefaultSettings();
-
-        // Add instrument and tuning dropdowns
         this.addInstrumentDropdowns();
-        
-        // Set up tuning input based on default string count
         this.updateTuningInputs();
-        
-        // Set up pattern selects based on default pattern type
         this.updatePatternSelect();
-        
-        // Populate custom color inputs
         this.createCustomColorInputs();
-        
-        // Update string and fret input displays
         this.updateStringAndFretLabels();
-        
-        // Add fret number options
         this.addFretNumberOptions();
-        
-        // Add note appearance options
         this.addNoteAppearanceOptions();
-        
-        // Add string appearance options
         this.addStringAppearanceOptions();
-        
-        // Add fret appearance options
         this.addFretAppearanceOptions();
-        
-        // Add tempo control
         this.addTempoControl();
-        
-        // Add theory info display options
         this.addTheoryInfoOptions();
-        
-        // Add MP3 player controls
         this.addMp3PlayerControls();
-        
-        // Move control buttons
         this.moveControlButtons();
-        
-        // Set up event listeners
         this.setupEventListeners();
-        
-        // Initial fretboard draw
         this.updateFretboard();
-        
-        // Show music theory info
         this.updateTheoryInfo();
-        
-        // Add melodic pattern handling
         this.setupMelodicPatternControls();
-        
-        // Setup chromatic tuner
         this.setupChromaticTuner();
-        
-        // Setup collapsible sections
         this.setupCollapsibleSections();
-        
-        // Add theme switching functionality
         this.setupThemeSwitching();
-        
-        // Init sidebar state based on user preference
         const sidebar = document.querySelector('.sidebar');
         if (this.sidebarVisible) {
             sidebar.classList.add('sidebar-visible');
@@ -298,28 +216,20 @@ class App {
             backdrop.classList.remove('visible');
         }
     }
-    
-    /**
-     * Toggle sidebar visibility
-     */
     toggleSidebar() {
         const sidebar = document.querySelector('.sidebar');
         const backdrop = document.querySelector('.sidebar-backdrop');
-        
         if (this.sidebarVisible) {
-            // Hide sidebar
             sidebar.classList.remove('sidebar-visible');
             backdrop.classList.remove('visible');
             document.getElementById('sidebar-toggle').setAttribute('aria-expanded', 'false');
             document.body.style.overflow = ''; // Restore scrolling
         } else {
-            // Show sidebar
             sidebar.classList.add('sidebar-visible');
             backdrop.classList.add('visible');
             document.getElementById('sidebar-toggle').setAttribute('aria-expanded', 'true');
             document.body.style.overflow = 'hidden'; // Prevent background scrolling on mobile
         }
-        
         this.sidebarVisible = !this.sidebarVisible;
         localStorage.setItem('sidebarVisible', this.sidebarVisible ? 'true' : 'false');
     }
